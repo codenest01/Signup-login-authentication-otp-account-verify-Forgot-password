@@ -1,0 +1,41 @@
+/* styles/Footer.module.css */
+.footer {
+    width: 100%;
+    margin-top: 122px;
+    padding: 20px 0;
+    background-color: #343a40;
+  
+}
+
+.footerList {
+    list-style: none;
+    padding: 0;
+}
+
+.footerList li {
+    margin-bottom: 0.5rem;
+}
+
+.footerLink {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footerLink:hover {
+    color: #00aced; /* Change to a color you prefer */
+}
+
+.socialIcon {
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.socialIcon:hover {
+    color: #00aced; /* Change to a color you prefer */
+}
+
+.footer h5 {
+    margin-bottom: 1rem;
+}

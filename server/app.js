@@ -5,8 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const connectDB = require('./config/data-base');
 const cors = require('cors');
-var indexRouter = require('./routes/signup');
-var usersRouter = require('./routes/login');
+var signupRouter = require('./routes/signup');
+var loginRouter = require('./routes/login');
+
+const authenticateToken = require('./middleware/authenticateToken');
 
 var app = express();
 connectDB()
@@ -21,8 +23,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', signupRouter);
+app.use('/', loginRouter);
+
+// app.use('/' , authenticateToken , routername)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

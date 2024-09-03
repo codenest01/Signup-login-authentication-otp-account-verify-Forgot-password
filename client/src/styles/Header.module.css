@@ -1,0 +1,110 @@
+.navbar {
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 2px solid rgb(224, 201, 201); /* Debug border */
+}
+
+
+.navbarBrand img {
+  width: auto;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+.navLink {
+  color: #000000 !important;
+  text-decoration: none;
+  padding: 0 1rem;
+  margin-left: 44px;
+}
+
+.searchBar {
+  background-color: #fff;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  margin-right: 112px;
+}
+
+.searchBarInput {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  padding: 4px;
+  font-size: 16px;
+}
+
+.searchBarButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 10px;
+  color: #6a5acd;
+}
+
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  right: -250px;
+  background-color: white;
+  padding-top: 20px;
+  transition: 0.3s;
+  border-left: 1px solid #ccc;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.sidenavLink {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block;
+  transition: 0.2s;
+}
+
+.sidenavLink:hover {
+  background-color: #f0f0f0;
+}
+
+.openButtonContainer {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.openButton {
+  background-color: transparent;
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.cutIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: black;
+  cursor: pointer;
+  border: none;
+}
+
+@media (min-width: 768px) {
+  .sidenav {
+      display: none;
+  }
+
+  .openButtonContainer {
+      display: none;
+  }
+}
