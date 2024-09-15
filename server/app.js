@@ -7,9 +7,9 @@ const connectDB = require('./config/data-base');
 const cors = require('cors');
 var signupRouter = require('./routes/signup');
 var loginRouter = require('./routes/login');
-
-const authenticateToken = require('./middleware/authenticateToken');
-
+var userSchema = require("./models/User")
+var productRouter = require('./routes/productRouter');
+var ensureAuthenticated = require('./middleware/auth')
 var app = express();
 connectDB()
 // view engine setup
@@ -23,10 +23,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', signupRouter);
-app.use('/', loginRouter);
 
-// app.use('/' , authenticateToken , routername)
+
+
+app.use('/auth' , ensureAuthenticated);
+app.use('/', signupRouter);
+app.use('/', loginRouter)
+app.use('/', productRouter);
+
 
 
 // catch 404 and forward to error handler
