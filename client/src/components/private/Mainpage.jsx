@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../styles/Mainpage.module.css';
+import styles from '../../styles/Mainpage.module.css';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import 'react-toastify/dist/ReactToastify.css';
 
 function Mainpage() {
   // Retrieve the user's email and username from localStorage

@@ -11,9 +11,12 @@ function RefreshHandler({ setIsAuthenticated }) {
             setIsAuthenticated(true);
             if (
                 location.pathname === '/login' ||
-                location.pathname === '/signup') {
+                location.pathname === '/signup' 
+            ) {
                 navigate('/home', { replace: true });
             }
+        } else {
+            setIsAuthenticated(false);
         }
     }, [location, navigate, setIsAuthenticated]);
 

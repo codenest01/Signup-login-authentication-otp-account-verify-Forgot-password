@@ -1,5 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
+var expressValidator  = require('express-validator')
+const rateLimit = require('express-rate-limit');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -7,14 +9,35 @@ const connectDB = require('./config/data-base');
 const cors = require('cors');
 var signupRouter = require('./routes/signup');
 var loginRouter = require('./routes/login');
+var resetPassword = require('./routes/private/resetpassword')
 var userSchema = require("./models/User")
-var productRouter = require('./routes/productRouter');
+var productRouter = require('./routes//private/productRouter');
+
 var ensureAuthenticated = require('./middleware/auth')
+
+var verifyRoute = require('./routes/private/verify')
+
+var verifyCode = require("./routes/private/verify-code")
+
+var tempAuthenticaated = require('./middleware/account-verify')
+var resetPasswordMiddleware = require('./middleware/resetPasswordMiddleware')
+const sendOtpRoute = require('./routes//private/ResetPass-send-otp');
+const verifyOtpRoute = require('./routes/private/verify-otp');
+
 var app = express();
 connectDB()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
+
+const otpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 134, // Limit each IP to 5 requests per window
+  message: 'Too many OTP requests from this IP, please try again later.',
+});
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,13 +48,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-
+app.use('/', otpLimiter);
 app.use('/auth' , ensureAuthenticated);
+app.use('/auth' , tempAuthenticaated);
+app.use('/auth' , resetPasswordMiddleware);
+
 app.use('/', signupRouter);
 app.use('/', loginRouter)
 app.use('/', productRouter);
 
+//Verify user Otp on Account verification
+app.use('/',verifyCode );
 
+//verify user account and send an email
+app.use('/', verifyRoute);
+
+//reset user password
+app.use('/' , resetPassword)
+
+//Send Otp For reset password
+app.use('/', sendOtpRoute); 
+
+//Verify Otp for reset password
+app.use('/', verifyOtpRoute); 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

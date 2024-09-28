@@ -23,29 +23,34 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post('http://localhost:5000/login', formData);
       toast.success('Login successful!');
-      
-      const { token, email ,username } = response.data;
-
+        
+      const { token, email, username } = response.data;
+  
+      // Store token and user details in local storage
       localStorage.setItem('token', token);
       localStorage.setItem('email', email);
       localStorage.setItem('username', username);
-
+  
       setTimeout(() => {
         navigate('/home'); // Redirect to home page or another route
       }, 2000);
-    
+  
     } catch (error) {
       if (error.response && error.response.data) {
-        const { errors, error: generalError } = error.response.data;
-
-        if (errors) {
-          errors.forEach(err => toast.error(err.msg)); // Display each error message
-        } else if (generalError) {
-          toast.error(generalError);
+        const { error: generalError, redirectTo, verifyToken, verifyTokenEmail } = error.response.data;
+  
+        // If the user is not verified, store verifyToken and email in local storage
+        if (verifyToken && verifyTokenEmail) {
+          localStorage.setItem('verifyToken', verifyToken);
+          localStorage.setItem('verifyTokenEmail', verifyTokenEmail);
+          toast.info('Please verify your account.');
+          navigate('/verify');  // Redirect to the verification page
+        } else {
+          toast.error(generalError || 'Login failed. Please try again.');
         }
       } else {
         toast.error('Login failed. Please try again.');
@@ -53,6 +58,8 @@ function Login() {
       console.error('Error:', error.response ? error.response.data : error.message);
     }
   };
+  
+  
 
   return (
     <div className={styles.container}>
@@ -84,6 +91,8 @@ function Login() {
         </div>
         <button type="submit" className={styles.submitButton}>Log In</button>
       </form>
+      <li>Forget password? <a href="/requestotp">Forget</a></li>
+
       <ToastContainer />
     </div>
   );

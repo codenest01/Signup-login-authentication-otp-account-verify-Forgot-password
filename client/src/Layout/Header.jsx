@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../styles/Header.module.css';
+import styles from '../styles/layout/Header.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,7 +28,7 @@ const Header = () => {
                     </div>
 
                     <div className={styles.sidenav} id="sidenav">
-                        <button className={`bg-info mb-5 ${styles.cutIcon}`} onClick={closeNav}>
+                        <button className={`bg-info ${styles.cutIcon}`} onClick={closeNav}>
                             <FontAwesomeIcon icon={faTimes} />
                         </button>
                         <a href="#" className={styles.sidenavLink}>Home</a>
