@@ -24,7 +24,7 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await axios.post('http://localhost:5000/signup', formData);
       toast.success('Signup successful!');
@@ -93,7 +93,13 @@ function Signup() {
           />
         </div>
         <button type="submit" className={styles.submitButton}>Sign Up</button>
+
+        <div className='mt-3 d-flex justify-content-center align-item-center'>
+          Already have an account? <a href="/login">Login</a>
+        </div>
+
       </form>
+
       <ToastContainer />
     </div>
   );

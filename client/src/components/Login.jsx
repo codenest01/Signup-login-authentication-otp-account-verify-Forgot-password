@@ -91,7 +91,7 @@ function Login() {
         </div>
         <button type="submit" className={styles.submitButton}>Log In</button>
       </form>
-      <li>Forget password? <a href="/requestotp">Forget</a></li>
+      <div className='mt-3'>Forget password? <a href="/requestotp">Forget</a></div>
 
       <ToastContainer />
     </div>

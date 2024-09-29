@@ -3,8 +3,8 @@ const router = express.Router();
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const Register = require('../../models/User');
-const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 // Configure nodemailer transport
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -42,12 +42,21 @@ router.post('/send-otp', async (req, res) => {
 
     // Generate OTP (6-digit random code)
     const otp = crypto.randomBytes(3).toString('hex').toUpperCase();
-    const hashedOtp = await bcrypt.hash(otp, 10);
-
-    // Set OTP and expiration time (5-minute validity)
+    const hashedOtp = await bcrypt.hash(otp, 10); // Generate a 6-digit OTP
     user.verifyCode = hashedOtp;
-    user.otpExpiresAt = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
+    
+    
+    user.otpExpiresAt = Date.now() + 30 * 60 * 1000; // OTP expires in 5 minutes
     user.lastOtpSentAt = Date.now();
+
+    // Generate a JWT token for password reset (valid for 15 minutes)
+    const resetJwt = jwt.sign(
+      { _id: user._id, email: user.email },
+      process.env.SECRET_KEY,
+      { expiresIn: '1h' }
+    );
+    user.resetJwt = resetJwt; // Save the reset-related JWT in the user model
+
     await user.save();
 
     // Send email with the OTP
@@ -60,7 +69,11 @@ router.post('/send-otp', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'OTP sent to your email!' });
+    // Send response to frontend with the resetJwt token
+    res.status(200).json({
+      message: 'OTP sent to your email!',
+      token: resetJwt // Include the resetJwt token in the response
+    });
   } catch (err) {
     console.error('Error sending OTP:', err);
     res.status(500).json({ error: 'Internal server error' });

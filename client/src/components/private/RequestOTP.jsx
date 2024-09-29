@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-// import styles from '../../styles/RequestOtp.module.css';
+import styles from '../../styles/RequestOtp.module.css';
 
 const RequestOTP = () => {
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -16,59 +14,32 @@ const RequestOTP = () => {
     try {
       const response = await axios.post('http://localhost:5000/send-otp', { email });
       setMessage(response.data.message);
-      setOtpSent(true);
-      setError('');
-    } catch (err) {
-      setError(err.response.data.error || 'Something went wrong');
-      setMessage('');
-    }
-  };
-
-  const handleVerifyOTP = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/verify-otp', { email, otp });
-      setMessage(response.data.message);
       setError('');
 
-      // Store the token and email in local storage
+      // Store the email in localStorage for use in the ResetPassword page
       localStorage.setItem('reset-Pass-Token', response.data.token);
 
-      navigate('/resetpassword', { state: { email } });
+      // Navigate to the reset password page
+      navigate('/resetpassword');
     } catch (err) {
-      setError(err.response.data.error || 'Invalid OTP or something went wrong');
+      setError(err.response?.data?.error || 'Something went wrong');
       setMessage('');
     }
   };
 
   return (
     <div className={styles.container}>
-      <h2>Forgot Password</h2>
-      <form onSubmit={otpSent ? handleVerifyOTP : handleRequestOTP}>
-        <label>Email</label>
+      <h2 className={styles.title}>Forgot Password</h2>
+      <form onSubmit={handleRequestOTP} className={styles.form}>
+        <label className={styles.label}>Email</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          disabled={otpSent}
           className={styles.input}
         />
-        {otpSent && (
-          <>
-            <label>OTP</label>
-            <input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              required
-              className={styles.input}
-            />
-          </>
-        )}
-        <button type="submit" className={`${styles.button} mt-3`}>
-          {otpSent ? 'Verify OTP' : 'Request OTP'}
-        </button>
+        <button type="submit" className={styles.button}>Request OTP</button>
       </form>
       {message && <p className={styles.message}>{message}</p>}
       {error && <p className={styles.error}>{error}</p>}

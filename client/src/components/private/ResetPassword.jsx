@@ -1,64 +1,83 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from '../../styles/ResetPassword.module.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import styles from '../../styles/ResetPassword.module.css';
 
 function ResetPassword() {
+  const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Retrieve the reset JWT from localStorage
+    const resetJwt = localStorage.getItem("reset-Pass-Token");
+
+    if (!resetJwt) {
+      toast.error('Reset token not found. Please request a new one.');
+      return;
+    }
 
     try {
-      // Retrieve JWT token from localStorage
-      const token = localStorage.getItem('reset-Pass-Token');
-      if (!token) {
-        setError('No reset token found. Please request a password reset again.');
-        return;
-      }
-
-      // Make the request to reset the password
-      const response = await axios.post('http://localhost:5000/reset-password', { newPassword }, {
+      const response = await axios.post('http://localhost:5000/api/reset-password', {
+        otp,
+        newPassword,
+      },{
         headers: {
-          Authorization: `Bearer ${token}`  // Send token in Authorization header
+          Authorization: `Bearer ${resetJwt}` // Correctly set resetJwt from localStorage
         }
       });
 
-      setMessage(response.data.message); // Display success message
-      localStorage.removeItem('reset-Pass-Token'); // Optionally clear the token after success
-      setNewPassword(''); 
-      
+      // Show success message
+      toast.success(response.data.msg || 'Password reset successfully!');
+      console.log('Response:', response.data);
+
+      // Clear reset token after successful password reset
+      localStorage.removeItem("reset-Pass-Token");
+
+      // Redirect to /login after 2 seconds
       setTimeout(() => {
         navigate('/login');
       }, 2000);
-
     } catch (error) {
-      setError(error.response?.data?.message || 'An error occurred while resetting the password.');
-      setMessage('');
+      // Show error message
+      toast.error(error.response?.data?.msg || 'Something went wrong!');
+      console.error('Error:', error);
     }
   };
 
   return (
-    <div className={styles.container}>
-      <h2>Reset Your Password</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>New Password:</label>
-          <input 
-            type="password" 
-            value={newPassword} 
-            onChange={(e) => setNewPassword(e.target.value)} 
-            required 
-          />
-        </div>
-        <button type="submit">Reset Password</button>
-      </form>
-      {message && <p className={styles.message}>{message}</p>}
-      {error && <p className={styles.error}>{error}</p>}
-      <ToastContainer /> {/* Toast container for notifications */}
+    <div className={styles.main}>
+      <div className={styles.maincontainer}>
+        <h2>Reset Password</h2>
+        <form onSubmit={handleSubmit}>
+          <div className={styles['form-groups']}>
+            <label htmlFor="otp">OTP:</label>
+            <input
+              type="text"
+              id="otp"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+          </div>
+          <div className={styles['form-groups']}>
+            <label htmlFor="newPassword">New Password:</label>
+            <input
+              type="password"
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className={styles.rest-button}>Submit</button>
+        </form>
+        <ToastContainer />
+      </div>
     </div>
   );
 }

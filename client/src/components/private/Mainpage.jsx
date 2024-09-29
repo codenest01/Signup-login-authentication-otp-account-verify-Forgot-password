@@ -1,41 +1,57 @@
-import React from 'react';
-import styles from '../../styles/Mainpage.module.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function Mainpage() {
-  // Retrieve the user's email and username from localStorage
-  const userEmail = localStorage.getItem('email');
-  const username = localStorage.getItem('username');
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get('http://localhost:5000/api/user-data', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUserData(response.data);
+        } catch (error) {
+          toast.error('Failed to fetch user data');
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchUserData();
+  }, []);
 
   const logoutHandle = () => {
-    // Remove user data from localStorage
-    localStorage.removeItem('token')
-    localStorage.removeItem('email');
-    localStorage.removeItem('username');
-    
-    // Show toast notification
-    toast.success('You have successfully logged out!', {
-      position: "top-right",
-      autoClose: 2000, // Duration of toast display
-    });
-    
-    // Redirect after a delay
+    // Clear token and user data
+    localStorage.removeItem('token');
+    setUserData(null);
+    toast.success('You have successfully logged out!');
     setTimeout(() => {
       window.location.href = '/login';
-    }, 2000); // 2 seconds delay
+    }, 2000);
   };
 
-  return (
-    <div className={styles.container}>
-      <button className={styles.logoutButton} onClick={logoutHandle}>Logout</button>
-      <h1 className={styles.title}>Main Page</h1>
-      {userEmail ? (
-        <p className={styles.message}>Welcome, {username ? `${username} (${userEmail})` : userEmail}!</p>
-      ) : (
-        <p className={styles.message}>No user is logged in.</p>
-      )}
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
+  return (
+    <div>
+      <button onClick={logoutHandle}>Logout</button>
+      <h1>Main Page</h1>
+      {userData ? (
+     <div>
+         <p>Welcome, {userData.username}!</p>
+         <p>Welcome, {userData.email}!</p>
+         <p>Welcome, {userData._id}!</p>
+     </div>
+      ) : (
+        <p>No user is logged in.</p>
+      )}
       <ToastContainer />
     </div>
   );

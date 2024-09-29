@@ -37,7 +37,10 @@ const registerSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-
+  resetJwt: {
+    type: String,
+    default: null,  // This can be null until set
+  },
 },{ timestamps: true });
 
 // Middleware to hash password before saving
@@ -55,6 +58,11 @@ registerSchema.pre('save', async function (next) {
   }
 });
 
+
+// Method to compare password
+registerSchema.methods.comparePassword = async function (inputPassword) {
+  return await bcrypt.compare(inputPassword, this.password);
+};
 
 
 

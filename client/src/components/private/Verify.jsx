@@ -3,7 +3,7 @@ import axios from 'axios';
 import styles from '../../styles/Verify.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useNavigate } from 'react-router-dom';
 function Verify() {
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
