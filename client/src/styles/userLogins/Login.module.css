@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, rgba(98, 182, 239, 0.9), rgba(93, 94, 245, 0.8)), url('https://www.transparenttextures.com/patterns/cubes.png');
+  background-size: cover;
+}
+
+.title {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.form {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.formGroup {
+  margin-bottom: 1.2rem;
+}
+
+.label {
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.input {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.submitButton {
+  padding: 0.8rem;
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+.forgotPassword {
+  margin-top: 1rem;
+  text-align: center;
+}

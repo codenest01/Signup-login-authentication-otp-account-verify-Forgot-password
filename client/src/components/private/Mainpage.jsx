@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import styles from '../../styles/private/Mainpage.module.css'; // Adjust the path as needed
 
 function Mainpage() {
   const [userData, setUserData] = useState(null);
@@ -26,8 +27,9 @@ function Mainpage() {
   }, []);
 
   const logoutHandle = () => {
-    // Clear token and user data
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    localStorage.removeItem('username');
     setUserData(null);
     toast.success('You have successfully logged out!');
     setTimeout(() => {
@@ -36,22 +38,27 @@ function Mainpage() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   return (
-    <div>
-      <button onClick={logoutHandle}>Logout</button>
-      <h1>Main Page</h1>
-      {userData ? (
-     <div>
-         <p>Welcome, {userData.username}!</p>
-         <p>Welcome, {userData.email}!</p>
-         <p>Welcome, {userData._id}!</p>
-     </div>
-      ) : (
-        <p>No user is logged in.</p>
-      )}
+    <div className={styles.dashboardContainer}>
+      <header className={styles.header}>
+        <h1>Main Dashboard</h1>
+        <button onClick={logoutHandle} className={styles.logoutButton}>Logout</button>
+      </header>
+
+      <div className={styles.userInfoCard}>
+        {userData ? (
+          <>
+            <h2>Welcome, {userData.username}!</h2>
+            <p>Email: {userData.email}</p>
+          </>
+        ) : (
+          <p>No user is logged in.</p>
+        )}
+      </div>
+      
       <ToastContainer />
     </div>
   );

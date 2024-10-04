@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from '../styles/Login.module.css'; // Update with your styles path
+import styles from '../../styles/userLogins/Login.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for react-toastify
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -48,7 +48,9 @@ function Login() {
           localStorage.setItem('verifyToken', verifyToken);
           localStorage.setItem('verifyTokenEmail', verifyTokenEmail);
           toast.info('Please verify your account.');
-          navigate('/verify');  // Redirect to the verification page
+          setTimeout(() => {
+            navigate('/verify');
+          }, 3000);
         } else {
           toast.error(generalError || 'Login failed. Please try again.');
         }
@@ -59,12 +61,11 @@ function Login() {
     }
   };
   
-  
-
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Login</h1>
+      
       <form className={styles.form} onSubmit={handleSubmit}>
+      <h2 className={styles.title}>Login</h2> 
         <div className={styles.formGroup}>
           <label htmlFor="email" className={styles.label}>Email</label>
           <input
@@ -90,9 +91,13 @@ function Login() {
           />
         </div>
         <button type="submit" className={styles.submitButton}>Log In</button>
+        <div className={styles.forgotPassword}>
+          Already have an  account <a href="/signup" >Signup</a>
+        </div>
+        <div className={styles.forgotPassword}>
+          Forget password? <a href="/requestotp" >Reset</a>
+        </div>
       </form>
-      <div className='mt-3'>Forget password? <a href="/requestotp">Forget</a></div>
-
       <ToastContainer />
     </div>
   );
