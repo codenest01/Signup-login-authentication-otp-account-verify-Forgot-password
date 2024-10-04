@@ -7,23 +7,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const connectDB = require('./config/data-base');
 const cors = require('cors');
-var signupRouter = require('./routes/signup');
-var loginRouter = require('./routes/login');
-var resetPassword = require('./routes/private/resetpassword')
+var signupRouter = require('./routes/userLogins/signup');
+var loginRouter = require('./routes/userLogins/login');
+var resetPassword = require('./routes/reset-Password/resetpassword')
 var userSchema = require("./models/User")
 var productRouter = require('./routes//private/productRouter');
 const passwordCompareRoute = require('./routes/passwordUtils'); ///check password
 var ensureAuthenticated = require('./middleware/auth')
 
+
 var userData = require('./routes/private/user-data')
 
-var verifyRoute = require('./routes/private/verify')
+var verifyRoute = require('./routes/verify-accounts/verify')
 
-var verifyCode = require("./routes/private/verify-code")
+var verifyCode = require("./routes/verify-accounts/verify-code")
 
 var tempAuthenticaated = require('./middleware/account-verify')
 var resetPasswordMiddleware = require('./middleware/resetPasswordMiddleware')
-const sendOtpRoute = require('./routes//private/ResetPass-send-otp');
+const sendOtpRoute = require('./routes/reset-Password/ResetPass-send-otp');
 const verifyOtpRoute = require('./routes/private/verify-otp');
 
 var app = express();
@@ -31,6 +32,8 @@ connectDB()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
 
 
 
@@ -78,6 +81,8 @@ app.use('/', verifyOtpRoute);
 app.use('/api', passwordCompareRoute);///check password
 
 app.use('/api' , userData)
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

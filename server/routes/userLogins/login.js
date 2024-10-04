@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Register = require('../models/User'); // Assuming Register model exists for user data
+const Register = require('../../models/User'); // Assuming Register model exists for user data
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

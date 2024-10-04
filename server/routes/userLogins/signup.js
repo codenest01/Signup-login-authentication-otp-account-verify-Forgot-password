@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Register = require('../models/User'); 
+const Register = require('../../models/User'); 
 const { body, validationResult } = require('express-validator'); 
 
 // Validation and sanitization middleware
